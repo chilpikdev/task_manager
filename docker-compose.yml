@@ -1,0 +1,83 @@
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: ./_docker/images/nginx/Dockerfile
+        container_name: task_nginx
+        volumes:
+            - ./:/var/www/
+            # - ./_docker/images/nginx/conf.d/:/etc/nginx/conf.d/
+        ports:
+            - "8000:80"
+        networks:
+            - task_network
+
+    php:
+        build:
+            context: .
+            dockerfile: ./_docker/images/php/Dockerfile
+        container_name: task_php
+        volumes:
+            - ./:/var/www/
+        depends_on:
+            - nginx
+        networks:
+            - task_network
+
+    postgres:
+        image: postgres:latest
+        container_name: task_postgres
+        environment:
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_DATABASE}
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - task_network
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: task_pgadmin
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@task.uz
+            PGADMIN_DEFAULT_PASSWORD: 3~1HYhp4e3@n
+        ports:
+            - "8080:80"
+        volumes:
+            - pgadmin_data:/var/lib/pgadmin
+        depends_on:
+            - postgres
+        networks:
+            - task_network
+
+    redis:
+        image: redis:latest
+        container_name: task_redis
+        command:
+            [
+                "sh",
+                "-c",
+                "redis-server --requirepass $${REDIS_PASSWORD}"
+            ]
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        environment:
+            REDIS_PASSWORD: ${REDIS_PASSWORD}
+        networks:
+            - task_network
+
+volumes:
+    postgres_data:
+    redis_data:
+    pgadmin_data:
+
+
+networks:
+    task_network:
+        driver: bridge
