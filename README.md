@@ -9,7 +9,7 @@ docker compose up -d
 ### 2. Открываем контейнер
 
 ```
-docker exec -it elyurt_php bash
+docker exec -it task_php bash
 ```
 
 ### 3. Устанавливаем зависимости
