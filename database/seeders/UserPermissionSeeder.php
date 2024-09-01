@@ -24,11 +24,11 @@ class UserPermissionSeeder extends Seeder
 
         // create roles and assign existing permissions
 
-        $role1 = Role::create(['guard_name' => 'web', 'name' => 'admin']);
+        $role1 = Role::create(['guard_name' => 'web', 'name' => 'chief']);
         $role1->givePermissionTo('dashboard');
         $role1->givePermissionTo('manage-users');
 
-        $role2 = Role::create(['guard_name' => 'web', 'name' => 'user']);
+        $role2 = Role::create(['guard_name' => 'web', 'name' => 'employee']);
 
         // create user
         $user = User::create([
