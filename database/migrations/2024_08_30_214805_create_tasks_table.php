@@ -20,7 +20,8 @@ return new class extends Migration
             $table->timestamp('deadline');
             $table->boolean('archived')->default(false);
             $table->enum('priority', ['high', 'medium']);
-            $table->enum('status', ['new', 'in_progress', 'pending', 'correction', 'completed', 'canceled']);
+            // todo: new deadline, status for deadline
+            $table->enum('status', ['new', 'in_progress', ' ', 'correction', 'completed', 'canceled']);
             $table->timestamps();
             $table->softDeletes();
         });

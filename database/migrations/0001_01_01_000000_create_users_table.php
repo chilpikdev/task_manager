@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('sessions', function (Blueprint $table) {
