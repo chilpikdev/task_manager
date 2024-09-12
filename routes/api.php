@@ -36,7 +36,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     /**
      * Routes for Verifieds & Actives Users
      */
-    // Route::middleware(['phone.verified', 'user.active'])->group(function () {
+    Route::middleware(['user.active'])->group(function () {
 
-    // });
+    });
 });

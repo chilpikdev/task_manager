@@ -51,4 +51,12 @@ class User extends Authenticatable
             'active' => 'boolean',
         ];
     }
+
+    /**
+     * Ceck User is Active
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
 }
