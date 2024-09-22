@@ -2,12 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Exceptions\ApiErrorException;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckUserActiveMiddleware
+class ChangeLocale
 {
     /**
      * Handle an incoming request.
@@ -16,8 +15,11 @@ class CheckUserActiveMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->user()->isActive()) {
-            throw new ApiErrorException(403, "User is not active");
+        $key = 'Accept-Language';
+
+        if ($request->hasHeader($key) && $request->header($key)) {
+            $locale = $request->header($key);
+            app()->setLocale($locale);
         }
 
         return $next($request);

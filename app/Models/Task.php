@@ -7,6 +7,7 @@ use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
@@ -16,11 +17,11 @@ class Task extends Model
     protected $table = 'tasks';
 
     protected $fillable = [
-        'chief_id',
-        'employee_id',
+        'created_by',
         'title',
         'description',
         'deadline',
+        'extended_deadline',
         'archived',
         'priority',
         'status',
@@ -30,6 +31,7 @@ class Task extends Model
     {
         return [
             'deadline' => 'datetime',
+            'extended_deadline' => 'datetime',
             'archived' => 'bool',
             'priority' => PriorityEnum::class,
             'status' => StatusEnum::class,
@@ -40,20 +42,20 @@ class Task extends Model
     }
 
     /**
-     * Summary of chief
+     * Summary of Created By
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function chief(): BelongsTo
+    public function createdBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'chief_id', 'id');
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
     /**
-     * Summary of employee
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * Summary of users
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function employee(): BelongsTo
+    public function users(): BelongsToMany
     {
-        return $this->belongsTo(User::class, 'chief_id', 'id');
+        return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id');
     }
 }

@@ -17,15 +17,15 @@ class LoginAction
     {
         try {
             $user = User::where('phone', $dto->phone)->firstOrFail();
-            $expiredAt = now()->addMinutes(config('sanctum.expiration'));
+            $expiresAt = now()->addMinutes(config('sanctum.expiration'));
 
             if (Hash::check($dto->password, $user->password)) {
                 auth()->login($user);
 
                 return response()->json([
                     'message' => __('auth.logged_id'),
-                    'token' => auth()->user()->createToken('API TOKEN', ['*'], $expiredAt)->plainTextToken,
-                    'expires_at' => $expiredAt->format('Y-m-d H:i:s'),
+                    'token' => auth()->user()->createToken('API TOKEN', ['*'], $expiresAt)->plainTextToken,
+                    'expires_at' => $expiresAt->format('Y-m-d H:i:s'),
                     'user' => new UserResource(auth()->user())
                 ]);
             } else {

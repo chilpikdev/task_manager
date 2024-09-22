@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Traits\ValidationTrait;
+use App\Http\Requests\Traits\ValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GetMeRequest extends FormRequest

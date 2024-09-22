@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Traits;
+namespace App\Http\Requests\Traits;
+
 use App\Exceptions\ApiValidationException;
 use Illuminate\Contracts\Validation\Validator;
 
@@ -14,8 +15,8 @@ trait ValidationTrait
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator): never
     {
-        throw new ApiValidationException($validator);
+        throw new ApiValidationException(validator: $validator);
     }
 }

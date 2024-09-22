@@ -12,7 +12,7 @@ readonly class LoginDTO
     ) {
     }
 
-    public static function from(LoginRequest $request): LoginDTO
+    public static function from(LoginRequest $request): self
     {
         return new self(
             phone: $request->get('phone'),

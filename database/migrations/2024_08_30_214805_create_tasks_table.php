@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chief_id')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
-            $table->foreignId('employee_id')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
+            $table->foreignId('created_by')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
             $table->string('title');
             $table->text('description')->nullable();
             $table->timestamp('deadline');
+            $table->timestamp('extended_deadline')->nullable();
             $table->boolean('archived')->default(false);
             $table->enum('priority', ['high', 'medium']);
-            // todo: new deadline, status for deadline
-            $table->enum('status', ['new', 'in_progress', ' ', 'correction', 'completed', 'canceled']);
+            $table->enum('status', ['new', 'in_progress', 'pending', 'correction', 'completed', 'canceled']);
             $table->timestamps();
             $table->softDeletes();
         });
