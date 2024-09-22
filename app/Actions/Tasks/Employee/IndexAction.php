@@ -8,7 +8,6 @@ use App\Http\Resources\Tasks\Employee\IndexCollection;
 use App\Models\Task;
 use App\Actions\Traits\GenereateKeyCacheTrait;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class IndexAction
 {
@@ -18,14 +17,7 @@ class IndexAction
     {
         try {
             $items = Cache::remember("employee:tasks:" . $this->generateKey(), now()->addDay(), function () use ($dto) {
-                $tasks = Task::select([
-                    '*',
-                    DB::raw("COALESCE(extended_deadline, deadline) AS actual_deadline")
-                ]);
-
-                $tasks->whereHas('users', function ($query) {
-                    $query->where('user_id', auth()->id());
-                });
+                $tasks = Task::userTasks(auth()->id());
 
                 if ($dto->search) {
                     $tasks->where('title', 'like', '%' . $dto->search . '%');
@@ -34,12 +26,14 @@ class IndexAction
                 switch ($dto->state) {
                     case 'active':
                         $tasks
-                            ->whereIn('status', ['new', 'in_progress'])
+                            ->whereIn('status', ['new', 'in_progress', 'pending', 'correction'])
                             ->whereRaw('COALESCE(extended_deadline, deadline) >= NOW()')
                             ->orderByRaw("
                                 CASE
                                     WHEN status = 'new' THEN 1
-                                    ELSE 2
+                                    WHEN status = 'correction' THEN 2
+                                    WHEN status = 'pending' THEN 3
+                                    ELSE 4
                                 END
                             ")
                             ->orderBy('actual_deadline', 'asc');

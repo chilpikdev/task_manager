@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Enums\PriorityEnum;
 use App\Enums\StatusEnum;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Task extends Model
 {
@@ -39,6 +41,27 @@ class Task extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('actual_deadline', function (Builder $builder) {
+            $builder
+                ->select('*')
+                ->selectSub('COALESCE(extended_deadline, deadline)', 'actual_deadline');
+        });
+    }
+
+    public function scopeUserTasks(Builder $builder, int $userId): Builder
+    {
+        return $builder->whereHas('users', function ($subQuery) use ($userId) {
+            $subQuery->where('user_id', $userId);
+        });
     }
 
     /**

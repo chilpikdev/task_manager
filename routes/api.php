@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('tasks')->group(function () {
                 Route::get('/', [EmployeeTaskController::class, 'index'])->name('employee.tasks.index');
                 Route::get('show/{id}', [EmployeeTaskController::class, 'show'])->name('employee.tasks.show');
+                Route::post('accept/{id}', [EmployeeTaskController::class, 'accept'])->name('employee.tasks.accept');
             });
         });
 
