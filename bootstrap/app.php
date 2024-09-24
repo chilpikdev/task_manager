@@ -14,7 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias(['user.active' => \App\Http\Middleware\CheckUserActiveMiddleware::class]);
+        $middleware->alias([
+            'user.active' => \App\Http\Middleware\CheckUserActiveMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
         $middleware->appendToGroup('api', [
             \App\Http\Middleware\ChangeLocale::class,
         ]);

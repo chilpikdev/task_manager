@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Comments\CommentController;
 use App\Http\Controllers\Tasks\EmployeeTaskController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,12 +39,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * Routes for Verifieds & Actives Users
      */
     Route::middleware(['user.active'])->group(function () {
-        Route::prefix('employee')->group(function () {
+        Route::prefix('employee')->middleware('role:employee')->group(function () {
             Route::prefix('tasks')->group(function () {
                 Route::get('/', [EmployeeTaskController::class, 'index'])->name('employee.tasks.index');
                 Route::get('show/{id}', [EmployeeTaskController::class, 'show'])->name('employee.tasks.show');
                 Route::post('accept/{id}', [EmployeeTaskController::class, 'accept'])->name('employee.tasks.accept');
             });
+
+            Route::prefix('comments')->group(function () {
+                Route::post('create', [CommentController::class, 'create'])->name('comments.create');
+            });
+        });
+
+        Route::prefix('comments')->group(function () {
+            Route::get('/', [CommentController::class, 'index'])->name('comments.index');
         });
 
     });

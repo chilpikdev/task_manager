@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Tasks\Employee;
+namespace App\Http\Resources\Comments;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,17 +17,16 @@ class IndexResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'status' => $this->status,
-            'priority' => $this->priority,
-            'actual_deadline' => $this->actual_deadline,
+            'text' => $this->text,
+            'file' => $this->file ? [
+                'src' => asset('storage/' . $this->file->path),
+                'type' => $this->file->type,
+            ] : [],
             'created_by' => $this->createdBy ? [
                 'id' => $this->createdBy->id,
                 'name' => $this->createdBy->name,
             ] : [],
-            'left' => Carbon::parse($this->actual_deadline)->fromNow(),
-            'point' => null,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

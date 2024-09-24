@@ -5,7 +5,7 @@ namespace App\Observers;
 use App\Models\Task;
 use App\Observers\Traits\CacheClearTrait;
 
-class TasksObserver
+class TaskObserver
 {
     use CacheClearTrait;
 

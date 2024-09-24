@@ -11,7 +11,6 @@ use App\Http\Requests\Tasks\IndexRequest;
 use App\Http\Resources\Tasks\Employee\IndexCollection;
 use App\Http\Resources\Tasks\Employee\ShowResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class EmployeeTaskController extends Controller
 {
