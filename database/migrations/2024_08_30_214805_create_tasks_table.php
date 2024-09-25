@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('extended_deadline')->nullable();
             $table->boolean('archived')->default(false);
             $table->enum('priority', ['high', 'medium']);
-            $table->enum('status', ['new', 'in_progress', 'pending', 'correction', 'completed', 'canceled']);
+            $table->enum('status', ['new', 'in_progress', 'extend', 'pending', 'correction', 'completed', 'canceled'])->default('new');
             $table->timestamps();
             $table->softDeletes();
         });

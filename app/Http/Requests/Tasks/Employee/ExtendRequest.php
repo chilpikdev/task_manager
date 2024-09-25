@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Tasks;
+namespace App\Http\Requests\Tasks\Employee;
 
 use App\Http\Requests\Traits\ValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexRequest extends FormRequest
+class ExtendRequest extends FormRequest
 {
     use ValidationTrait;
 
@@ -25,12 +25,8 @@ class IndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'search' => 'nullable|string|min:2',
-            'state' => 'required|string|in:active,expired,completed,archived',
-            'perpage' => 'nullable|integer',
-            'page' => 'nullable|integer',
-            'year' => 'nullable|integer|date_format:Y',
-            'month' => 'nullable|integer|date_format:m',
+            'task_id' => 'required|integer|exists:tasks,id',
+            'date_time' => 'required|date|date_format:Y-m-d H:i:s',
         ];
     }
 }

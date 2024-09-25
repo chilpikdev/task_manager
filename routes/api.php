@@ -43,17 +43,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('tasks')->group(function () {
                 Route::get('/', [EmployeeTaskController::class, 'index'])->name('employee.tasks.index');
                 Route::get('show/{id}', [EmployeeTaskController::class, 'show'])->name('employee.tasks.show');
-                Route::post('accept/{id}', [EmployeeTaskController::class, 'accept'])->name('employee.tasks.accept');
-            });
-
-            Route::prefix('comments')->group(function () {
-                Route::post('create', [CommentController::class, 'create'])->name('comments.create');
+                Route::post('accept', [EmployeeTaskController::class, 'accept'])->name('employee.tasks.accept');
+                Route::post('close', [EmployeeTaskController::class, 'close'])->name('employee.tasks.close');
+                Route::post('extend', [EmployeeTaskController::class, 'extend'])->name('employee.tasks.extend');
             });
         });
 
         Route::prefix('comments')->group(function () {
             Route::get('/', [CommentController::class, 'index'])->name('comments.index');
         });
-
     });
 });

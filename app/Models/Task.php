@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
@@ -80,5 +81,14 @@ class Task extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id');
+    }
+
+    /**
+     * Summary of extendDeadline
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function extendDeadline(): HasOne
+    {
+        return $this->hasOne(TaskDeadlineExtend::class, 'task_id', 'id');
     }
 }

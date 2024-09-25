@@ -7,6 +7,7 @@ use App\Exceptions\ApiErrorException;
 use App\Models\Task;
 use App\Actions\Traits\GenereateKeyCacheTrait;
 use App\Actions\Traits\ResponseTrait;
+use App\DTO\Tasks\Employee\AcceptDTO;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -15,10 +16,10 @@ class AcceptAction
 {
     use GenereateKeyCacheTrait, ResponseTrait;
 
-    public function __invoke(int $id): JsonResponse
+    public function __invoke(AcceptDTO $dto): JsonResponse
     {
         try {
-            $task = Task::userTasks(auth()->id())->findOrFail($id);
+            $task = Task::userTasks(auth()->id())->findOrFail($dto->taskId);
 
             if ($task->status === StatusEnum::NEW) {
                 $task->status = StatusEnum::IN_PROGRESS;

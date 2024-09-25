@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y \
     zip unzip \
     git && \
     docker-php-ext-install pdo_pgsql bcmath gd zip && \
+    docker-php-ext-install intl && \
+    docker-php-ext-configure intl && \
     apt-get clean
 
 WORKDIR /var/www

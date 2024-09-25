@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DTO\Tasks;
+namespace App\DTO\Tasks\Employee;
 
-use App\Http\Requests\Tasks\IndexRequest;
+use App\Http\Requests\Tasks\Employee\IndexRequest;
 
 readonly class IndexDTO
 {

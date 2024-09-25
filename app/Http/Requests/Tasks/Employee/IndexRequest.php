@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Comments;
+namespace App\Http\Requests\Tasks\Employee;
 
 use App\Http\Requests\Traits\ValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class IndexRequest extends FormRequest
 {
     use ValidationTrait;
 
@@ -25,9 +25,12 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'task_id' => 'required|integer|exists:tasks,id',
-            'text' => 'required|string|min:5|max:255',
-            'file' => 'nullable|file|mimes:png,jpg,pdf,xlsx,xls,doc,docx,zip,rar|max:10240',
+            'search' => 'nullable|string|min:2',
+            'state' => 'required|string|in:active,expired,completed,archived',
+            'perpage' => 'nullable|integer',
+            'page' => 'nullable|integer',
+            'year' => 'nullable|integer|date_format:Y',
+            'month' => 'nullable|integer|date_format:m',
         ];
     }
 }

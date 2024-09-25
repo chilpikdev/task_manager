@@ -2,11 +2,11 @@
 
 namespace App\Actions\Tasks\Employee;
 
-use App\DTO\Tasks\IndexDTO;
 use App\Exceptions\ApiErrorException;
 use App\Http\Resources\Tasks\Employee\IndexCollection;
 use App\Models\Task;
 use App\Actions\Traits\GenereateKeyCacheTrait;
+use App\DTO\Tasks\Employee\IndexDTO;
 use Illuminate\Support\Facades\Cache;
 
 class IndexAction
@@ -40,11 +40,12 @@ class IndexAction
                         break;
                     case 'expired':
                         $tasks
-                            ->whereIn('status', ['new', 'in_progress', 'pending', 'correction'])
+                            ->whereIn('status', ['new', 'in_progress', 'extend', 'pending', 'correction'])
                             ->whereRaw('COALESCE(extended_deadline, deadline) < NOW()')
                             ->orderByRaw("
                                 CASE
-                                    WHEN status = 'new' THEN 1
+                                    WHEN status = 'extend' THEN 1
+                                    WHEN status = 'new' THEN 2
                                     ELSE 2
                                 END
                             ")

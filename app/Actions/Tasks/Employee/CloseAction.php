@@ -1,34 +1,29 @@
 <?php
 
-namespace App\Actions\Comments;
+namespace App\Actions\Tasks\Employee;
 
 use App\Actions\Traits\ResponseTrait;
-use App\DTO\Comments\CreateDTO;
+use App\DTO\Tasks\Employee\CloseDTO;
 use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
 use App\Helpers\UploadFilesHelper;
 use App\Models\Comment;
 use App\Models\Task;
-use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CreateAction
+class CloseAction
 {
     use ResponseTrait;
 
-    public function __invoke(CreateDTO $dto): JsonResponse
+    public function __invoke(CloseDTO $dto): JsonResponse
     {
         try {
-            $task = Task::find($dto->taskId);
-
-            if (!$task) {
-                throw new NotFoundHttpException("Task not found");
-            }
+            $task = Task::findOrFail($dto->taskId);
 
             if ($task->status !== StatusEnum::IN_PROGRESS) {
-                throw new HttpClientException("Task Pending");
+                throw new HttpClientException("Task status not in progress");
             }
 
             if ($task->actual_deadline < now()) {
@@ -51,8 +46,9 @@ class CreateAction
             Comment::create($data);
 
             // after creating we changed task status to pending
-            $task->status = StatusEnum::PENDING;
-            $task->save();
+            $task->update([
+                'status' => StatusEnum::PENDING
+            ]);
 
             return $this->toResponse(
                 code: 200,
@@ -61,8 +57,8 @@ class CreateAction
             );
         } catch (HttpClientException $th) {
             throw new ApiErrorException(400, $th->getMessage());
-        } catch (NotFoundHttpException $th) {
-            throw new ApiErrorException(404, $th->getMessage());
+        } catch (ModelNotFoundException $th) {
+            throw new ApiErrorException(404, "Task not found");
         } catch (\Throwable $th) {
             throw new ApiErrorException(500, $th->getMessage());
         }

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\DTO\Comments;
-use App\Http\Requests\Comments\CreateRequest;
+namespace App\DTO\Tasks\Employee;
 
-readonly class CreateDTO
+use App\Http\Requests\Tasks\Employee\CloseRequest;
+
+readonly class CloseDTO
 {
     public function __construct(
         public int $taskId,
@@ -12,7 +13,7 @@ readonly class CreateDTO
     ) {
     }
 
-    public static function from(CreateRequest $request): self
+    public static function from(CloseRequest $request): self
     {
         return new self(
             taskId: $request->get('task_id'),
