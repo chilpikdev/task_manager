@@ -12,6 +12,6 @@ trait GenereateKeyCacheTrait
     {
         $uri = request()->getUri();
 
-        return app()->getLocale() . ':' . sha1($uri);
+        return '_' . app()->getLocale() . '_' . sha1($uri);
     }
 }

@@ -21,7 +21,7 @@ class CloseAction
         try {
             $task = Task::userTasks(auth()->id())->findOrFail($dto->taskId);
 
-            if ($task->status !== StatusEnum::IN_PROGRESS) {
+            if ($task->status !== StatusEnum::IN_PROGRESS && $task->status !== StatusEnum::CORRECTION) {
                 throw new Exception("Task status not in progress");
             }
 

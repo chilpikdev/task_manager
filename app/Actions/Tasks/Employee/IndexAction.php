@@ -16,7 +16,7 @@ class IndexAction
     public function __invoke(IndexDTO $dto): IndexCollection
     {
         try {
-            $items = Cache::remember("employee:tasks:" . $this->generateKey(), now()->addDay(), function () use ($dto) {
+            $items = Cache::remember("employees_tasks" . $this->generateKey(), now()->addDay(), function () use ($dto) {
                 $tasks = Task::userTasks(auth()->id());
 
                 if ($dto->search) {

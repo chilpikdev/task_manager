@@ -21,6 +21,6 @@ class CommentObserver
 
     public function deleted(Comment $comment): void
     {
-        $this->clear('tasks');
+        $this->clear('comments');
     }
 }

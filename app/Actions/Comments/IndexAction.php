@@ -16,7 +16,7 @@ class IndexAction
     public function __invoke(IndexDTO $dto): IndexCollection
     {
         try {
-            $items = Cache::remember("comments:" . $this->generateKey(), now()->addDay(), function () use ($dto) {
+            $items = Cache::remember("comments" . $this->generateKey(), now()->addDay(), function () use ($dto) {
                 $comments = Comment::where('task_id', $dto->taskId);
 
                 $comments->orderBy('id');
