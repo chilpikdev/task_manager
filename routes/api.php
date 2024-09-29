@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Comments\CommentController;
+use App\Http\Controllers\Tasks\ChiefTaskController;
 use App\Http\Controllers\Tasks\EmployeeTaskController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,10 +43,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::prefix('employee')->middleware('role:employee')->group(function () {
             Route::prefix('tasks')->group(function () {
                 Route::get('/', [EmployeeTaskController::class, 'index'])->name('employee.tasks.index');
-                Route::get('show/{id}', [EmployeeTaskController::class, 'show'])->name('employee.tasks.show');
                 Route::post('accept', [EmployeeTaskController::class, 'accept'])->name('employee.tasks.accept');
                 Route::post('close', [EmployeeTaskController::class, 'close'])->name('employee.tasks.close');
                 Route::post('extend', [EmployeeTaskController::class, 'extend'])->name('employee.tasks.extend');
+            });
+        });
+
+        Route::prefix('chief')->middleware('role:chief')->group(function () {
+            Route::prefix('tasks')->group(function () {
+                Route::get('/', [ChiefTaskController::class, 'index'])->name('chief.tasks.index');
+                Route::post('create', [ChiefTaskController::class, 'create'])->name('chief.tasks.create');
+                Route::get('show/{id}', [ChiefTaskController::class, 'show'])->name('chief.tasks.show');
+                Route::match(['put', 'patch'], 'udpate', [ChiefTaskController::class, 'update'])->name('chief.tasks.update');
+                // Route::post('accept', [EmployeeTaskController::class, 'accept'])->name('chief.tasks.accept');
+                // Route::post('close', [EmployeeTaskController::class, 'close'])->name('chief.tasks.close');
+                // Route::post('extend', [EmployeeTaskController::class, 'extend'])->name('chief.tasks.extend');
             });
         });
 

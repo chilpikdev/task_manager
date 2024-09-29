@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Tasks\Employee;
+namespace App\Http\Resources\Tasks\Chief;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IndexResource extends JsonResource
+class ShowResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,22 +18,14 @@ class IndexResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'status' => $this->status,
             'priority' => $this->priority,
-            'actual_deadline' => $this->actual_deadline,
-            'extend_deadline' => $this->extendDeadline(),
-            'created_by' => $this->createdBy ? [
-                'id' => $this->createdBy->id,
-                'name' => $this->createdBy->name,
-            ] : [],
+            'deadline' => $this->actual_deadline,
             'assigned' => $this->users ? $this->users->map(function ($user) {
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
                 ];
             }) : [],
-            'left' => Carbon::parse($this->actual_deadline)->fromNow(),
-            'point' => null,
         ];
     }
 }

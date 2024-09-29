@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 
 class Task extends Model
 {
@@ -85,10 +83,12 @@ class Task extends Model
 
     /**
      * Summary of extendDeadline
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return mixed
      */
-    public function extendDeadline(): HasOne
+    public function extendDeadline(): mixed
     {
-        return $this->hasOne(TaskDeadlineExtend::class, 'task_id', 'id');
+        $extendDeadline = $this->hasOne(TaskDeadlineExtend::class, 'task_id', 'id')->orderByDesc('id');
+
+        return $this->status == StatusEnum::EXTEND && $extendDeadline ? $extendDeadline->extend_deadline : null;
     }
 }

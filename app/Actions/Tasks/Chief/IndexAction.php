@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions\Tasks\Employee;
+namespace App\Actions\Tasks\Chief;
 
 use App\Exceptions\ApiErrorException;
-use App\Http\Resources\Tasks\Employee\IndexCollection;
+use App\Http\Resources\Tasks\Chief\IndexCollection;
 use App\Models\Task;
 use App\Actions\Traits\GenereateKeyCacheTrait;
-use App\DTO\Tasks\Employee\IndexDTO;
+use App\DTO\Tasks\Chief\IndexDTO;
 use Illuminate\Support\Facades\Cache;
 
 class IndexAction
@@ -16,14 +16,32 @@ class IndexAction
     public function __invoke(IndexDTO $dto): IndexCollection
     {
         try {
-            $items = Cache::remember("employee:tasks:" . $this->generateKey(), now()->addDay(), function () use ($dto) {
-                $tasks = Task::userTasks(auth()->id());
+            $items = Cache::remember("chief:tasks:" . $this->generateKey(), now()->addDay(), function () use ($dto) {
+                $tasks = Task::where('created_by', auth()->id());
 
                 if ($dto->search) {
                     $tasks->where('title', 'like', '%' . $dto->search . '%');
                 }
 
+                if ($dto->employeesIds) {
+                    $tasks->whereHas('users', function ($query) use ($dto) {
+                        $query->whereIn('user_id', $dto->employeesIds);
+                    });
+                }
+
                 switch ($dto->state) {
+                    case 'pending':
+                        $tasks
+                            ->whereIn('status', ['pending', 'extend'])
+                            ->orderByRaw("
+                                CASE
+                                    WHEN status = 'pending' THEN 1
+                                    WHEN status = 'extend' THEN 2
+                                    ELSE 3
+                                END
+                            ")
+                            ->orderBy('actual_deadline', 'asc');
+                        break;
                     case 'active':
                         $tasks
                             ->whereIn('status', ['new', 'in_progress', 'pending', 'correction'])
@@ -31,8 +49,8 @@ class IndexAction
                             ->orderByRaw("
                                 CASE
                                     WHEN status = 'new' THEN 1
-                                    WHEN status = 'correction' THEN 2
-                                    WHEN status = 'pending' THEN 3
+                                    WHEN status = 'pending' THEN 2
+                                    WHEN status = 'correction' THEN 3
                                     ELSE 4
                                 END
                             ")

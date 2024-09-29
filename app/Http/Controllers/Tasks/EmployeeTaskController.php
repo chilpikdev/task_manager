@@ -6,7 +6,6 @@ use App\Actions\Tasks\Employee\AcceptAction;
 use App\Actions\Tasks\Employee\CloseAction;
 use App\Actions\Tasks\Employee\ExtendAction;
 use App\Actions\Tasks\Employee\IndexAction;
-use App\Actions\Tasks\Employee\ShowAction;
 use App\DTO\Tasks\Employee\AcceptDTO;
 use App\DTO\Tasks\Employee\CloseDTO;
 use App\DTO\Tasks\Employee\ExtendDTO;
@@ -17,7 +16,6 @@ use App\Http\Requests\Tasks\Employee\CloseRequest;
 use App\Http\Requests\Tasks\Employee\ExtendRequest;
 use App\Http\Requests\Tasks\Employee\IndexRequest;
 use App\Http\Resources\Tasks\Employee\IndexCollection;
-use App\Http\Resources\Tasks\Employee\ShowResource;
 use Illuminate\Http\JsonResponse;
 
 class EmployeeTaskController extends Controller
@@ -31,17 +29,6 @@ class EmployeeTaskController extends Controller
     public function index(IndexRequest $request, IndexAction $action): IndexCollection
     {
         return $action(IndexDTO::from($request));
-    }
-
-    /**
-     * Summary of show
-     * @param int $id
-     * @param \App\Actions\Tasks\Employee\ShowAction $action
-     * @return \App\Http\Resources\Tasks\Employee\ShowResource
-     */
-    public function show(int $id, ShowAction $action): ShowResource
-    {
-        return $action($id);
     }
 
     /**
