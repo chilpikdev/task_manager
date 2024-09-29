@@ -33,7 +33,7 @@ class EmployeeTaskController extends Controller
 
     /**
      * Summary of accept
-     * @param int $id
+     * @param \App\Http\Requests\Tasks\Employee\AcceptRequest $request
      * @param \App\Actions\Tasks\Employee\AcceptAction $action
      * @return \Illuminate\Http\JsonResponse
      */

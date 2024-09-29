@@ -55,9 +55,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::post('create', [ChiefTaskController::class, 'create'])->name('chief.tasks.create');
                 Route::get('show/{id}', [ChiefTaskController::class, 'show'])->name('chief.tasks.show');
                 Route::match(['put', 'patch'], 'udpate', [ChiefTaskController::class, 'update'])->name('chief.tasks.update');
-                // Route::post('accept', [EmployeeTaskController::class, 'accept'])->name('chief.tasks.accept');
-                // Route::post('close', [EmployeeTaskController::class, 'close'])->name('chief.tasks.close');
-                // Route::post('extend', [EmployeeTaskController::class, 'extend'])->name('chief.tasks.extend');
+                Route::post('to-archive', [ChiefTaskController::class, 'toArchive'])->name('chief.tasks.to-archive');
+                Route::post('accept', [ChiefTaskController::class, 'accept'])->name('chief.tasks.accept');
+                Route::post('extend', [ChiefTaskController::class, 'extend'])->name('chief.tasks.extend');
+                Route::post('correction', [ChiefTaskController::class, 'correction'])->name('chief.tasks.correction');
             });
         });
 

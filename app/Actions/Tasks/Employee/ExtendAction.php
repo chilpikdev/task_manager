@@ -7,8 +7,8 @@ use App\DTO\Tasks\Employee\ExtendDTO;
 use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
 use App\Models\Task;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\JsonResponse;
 
 class ExtendAction
@@ -18,18 +18,18 @@ class ExtendAction
     public function __invoke(ExtendDTO $dto): JsonResponse
     {
         try {
-            $task = Task::findOrFail($dto->taskId);
+            $task = Task::userTasks(auth()->id())->findOrFail($dto->taskId);
 
             if ($task->status !== StatusEnum::IN_PROGRESS) {
-                throw new HttpClientException("Task status not in progress");
+                throw new Exception("Task status not in progress");
             }
 
             if ($task->actual_deadline >= now()) {
-                throw new HttpClientException("Deadline not expired");
+                throw new Exception("Deadline not expired");
             }
 
             // creating new item for recording requested date time
-            $task->extendDeadline()->create([
+            $task->taskDeadlineExtends()->create([
                 'extend_deadline' => $dto->dateTime,
             ]);
 
@@ -43,7 +43,7 @@ class ExtendAction
                 headers: [],
                 message: "Запрос на продление успешно отправлен.",
             );
-        } catch (HttpClientException $th) {
+        } catch (Exception $th) {
             throw new ApiErrorException(400, $th->getMessage());
         } catch (ModelNotFoundException $th) {
             throw new ApiErrorException(404, "Task not found");

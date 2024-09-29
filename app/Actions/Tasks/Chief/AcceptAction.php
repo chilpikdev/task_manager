@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Actions\Tasks\Employee;
+namespace App\Actions\Tasks\Chief;
 
 use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
 use App\Models\Task;
 use App\Actions\Traits\GenereateKeyCacheTrait;
 use App\Actions\Traits\ResponseTrait;
-use App\DTO\Tasks\Employee\AcceptDTO;
+use App\DTO\Tasks\Chief\AcceptDTO;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -19,14 +19,29 @@ class AcceptAction
     public function __invoke(AcceptDTO $dto): JsonResponse
     {
         try {
-            $task = Task::userTasks(auth()->id())->findOrFail($dto->taskId);
+            $task = Task::where('created_by', auth()->id())->findOrFail($dto->taskId);
 
-            if ($task->status === StatusEnum::NEW) {
-                $task->status = StatusEnum::IN_PROGRESS;
-                $task->save();
-            } else {
-                throw new Exception();
+            if ($task->status !== StatusEnum::PENDING) {
+                throw new Exception("Task not pending");
             }
+
+            foreach ($task->users as $user) {
+                $task->points()->create([
+                    'employee_id' => $user->id,
+                    'point' => $dto->point ?: 0,
+                ]);
+            }
+
+            if ($dto->text) {
+                $task->comments()->create([
+                    'created_by' => auth()->id(),
+                    'text' => $dto->text
+                ]);
+            }
+
+            $task->update([
+                'status' => StatusEnum::COMPLETED
+            ]);
 
             return $this->toResponse(
                 code: 200,
@@ -34,7 +49,7 @@ class AcceptAction
                 message: "task accepted",
             );
         } catch (Exception $ex) {
-            throw new ApiErrorException(400, "this item already accepted");
+            throw new ApiErrorException(400, $ex->getMessage());
         } catch (ModelNotFoundException $th) {
             throw new ApiErrorException(404, "item not found");
         } catch (\Throwable $th) {

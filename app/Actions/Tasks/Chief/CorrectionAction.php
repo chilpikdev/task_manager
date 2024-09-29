@@ -3,7 +3,7 @@
 namespace App\Actions\Tasks\Chief;
 
 use App\Actions\Traits\ResponseTrait;
-use App\DTO\Tasks\Chief\ExtendDTO;
+use App\DTO\Tasks\Chief\CorrectionDTO;
 use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
 use App\Models\Task;
@@ -11,28 +11,32 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
-class ExtendAction
+class CorrectionAction
 {
     use ResponseTrait;
 
-    public function __invoke(ExtendDTO $dto): JsonResponse
+    public function __invoke(CorrectionDTO $dto): JsonResponse
     {
         try {
             $task = Task::where('created_by', auth()->id())->findOrFail($dto->taskId);
 
-            if ($task->status !== StatusEnum::EXTEND && !$task->extendDeadline()) {
-                throw new Exception("Task status not sended for extending");
+            if ($task->status !== StatusEnum::PENDING) {
+                throw new Exception("Task not pending");
             }
 
+            $task->comments()->create([
+                'created_by' => auth()->id(),
+                'text' => $dto->text
+            ]);
+
             $task->update([
-                'extended_deadline' => $task->extendDeadline(),
-                'status' => StatusEnum::IN_PROGRESS
+                'status' => StatusEnum::CORRECTION
             ]);
 
             return $this->toResponse(
                 code: 200,
                 headers: [],
-                message: "Задача успешно продлён.",
+                message: "Задача отправлена для исрпавления.",
             );
         } catch (Exception $th) {
             throw new ApiErrorException(400, $th->getMessage());

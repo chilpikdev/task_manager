@@ -1,38 +1,38 @@
 <?php
 
-namespace App\Actions\Tasks\Employee;
+namespace App\Actions\Tasks\Chief;
 
-use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
 use App\Models\Task;
-use App\Actions\Traits\GenereateKeyCacheTrait;
 use App\Actions\Traits\ResponseTrait;
-use App\DTO\Tasks\Employee\AcceptDTO;
+use App\DTO\Tasks\Chief\ArchiveDTO;
+use App\Enums\StatusEnum;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
-class AcceptAction
+class ArchiveAction
 {
-    use GenereateKeyCacheTrait, ResponseTrait;
+    use ResponseTrait;
 
-    public function __invoke(AcceptDTO $dto): JsonResponse
+    public function __invoke(ArchiveDTO $dto): JsonResponse
     {
         try {
-            $task = Task::userTasks(auth()->id())->findOrFail($dto->taskId);
+            $task = Task::where('created_by', auth()->id())->findOrFail($dto->taskId);
 
-            if ($task->status !== StatusEnum::NEW) {
-                throw new Exception("This task already accepted");
+            if ($task->status === StatusEnum::CANCELED) {
+                throw new Exception("Task already archived");
             }
 
             $task->update([
-                'status' => StatusEnum::IN_PROGRESS,
+                'archived' => true,
+                'status' => StatusEnum::CANCELED,
             ]);
 
             return $this->toResponse(
                 code: 200,
                 headers: [],
-                message: "task accepted",
+                message: "Task Archived"
             );
         } catch (Exception $ex) {
             throw new ApiErrorException(400, $ex->getMessage());

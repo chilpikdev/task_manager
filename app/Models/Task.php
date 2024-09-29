@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
@@ -56,6 +58,12 @@ class Task extends Model
         });
     }
 
+    /**
+     * Summary of scopeUserTasks
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeUserTasks(Builder $builder, int $userId): Builder
     {
         return $builder->whereHas('users', function ($subQuery) use ($userId) {
@@ -82,13 +90,40 @@ class Task extends Model
     }
 
     /**
+     * Summary of comments
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'task_id', 'id');
+    }
+
+    /**
+     * Summary of points
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function points(): HasMany
+    {
+        return $this->hasMany(UserPoint::class, 'task_id', 'id');
+    }
+
+    /**
+     * Summary of taskDeadlineExtends
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function taskDeadlineExtends(): HasOne
+    {
+        return $this->hasOne(TaskDeadlineExtend::class, 'task_id', 'id');
+    }
+
+    /**
      * Summary of extendDeadline
      * @return mixed
      */
     public function extendDeadline(): mixed
     {
-        $extendDeadline = $this->hasOne(TaskDeadlineExtend::class, 'task_id', 'id')->orderByDesc('id');
+        $extendDeadline = $this->taskDeadlineExtends()->orderByDesc('id')->first();
 
-        return $this->status == StatusEnum::EXTEND && $extendDeadline ? $extendDeadline->extend_deadline : null;
+        return $this->status == StatusEnum::EXTEND && $extendDeadline ? $extendDeadline->extend_deadline->format('Y-m-d H:i:s') : null;
     }
 }

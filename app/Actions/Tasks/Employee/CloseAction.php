@@ -7,10 +7,9 @@ use App\DTO\Tasks\Employee\CloseDTO;
 use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
 use App\Helpers\UploadFilesHelper;
-use App\Models\Comment;
 use App\Models\Task;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\JsonResponse;
 
 class CloseAction
@@ -20,14 +19,14 @@ class CloseAction
     public function __invoke(CloseDTO $dto): JsonResponse
     {
         try {
-            $task = Task::findOrFail($dto->taskId);
+            $task = Task::userTasks(auth()->id())->findOrFail($dto->taskId);
 
             if ($task->status !== StatusEnum::IN_PROGRESS) {
-                throw new HttpClientException("Task status not in progress");
+                throw new Exception("Task status not in progress");
             }
 
             if ($task->actual_deadline < now()) {
-                throw new HttpClientException("Deadline expired");
+                throw new Exception("Deadline expired");
             }
 
             $data = [
@@ -43,7 +42,7 @@ class CloseAction
                 ];
             }
 
-            Comment::create($data);
+            $task->comments()->create($data);
 
             // after creating we changed task status to pending
             $task->update([
@@ -53,9 +52,9 @@ class CloseAction
             return $this->toResponse(
                 code: 200,
                 headers: [],
-                message: 'Comment was created',
+                message: 'Task closed and sended to examination',
             );
-        } catch (HttpClientException $th) {
+        } catch (Exception $th) {
             throw new ApiErrorException(400, $th->getMessage());
         } catch (ModelNotFoundException $th) {
             throw new ApiErrorException(404, "Task not found");

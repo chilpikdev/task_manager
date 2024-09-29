@@ -15,7 +15,7 @@ class ShowAction
     public function __invoke(int $id): ShowResource
     {
         try {
-            $task = Task::findOrFail($id);
+            $task = Task::where('created_by', auth()->id())->findOrFail($id);
             return new ShowResource($task);
         } catch (ModelNotFoundException $th) {
             throw new ApiErrorException(404, "Task not found");

@@ -5,7 +5,7 @@ namespace App\Http\Requests\Tasks\Chief;
 use App\Http\Requests\Traits\ValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AcceptRequest extends FormRequest
+class ArchiveRequest extends FormRequest
 {
     use ValidationTrait;
 
@@ -26,8 +26,6 @@ class AcceptRequest extends FormRequest
     {
         return [
             'task_id' => 'required|integer|exists:tasks,id',
-            'point' => 'nullable|numeric|between:1,5',
-            'text' => 'nullable|string|min:5|max:255',
         ];
     }
 }

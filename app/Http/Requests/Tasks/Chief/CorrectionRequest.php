@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Tasks\Employee;
+namespace App\Http\Requests\Tasks\Chief;
 
 use App\Http\Requests\Traits\ValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CloseRequest extends FormRequest
+class CorrectionRequest extends FormRequest
 {
     use ValidationTrait;
 
@@ -27,7 +27,6 @@ class CloseRequest extends FormRequest
         return [
             'task_id' => 'required|integer|exists:tasks,id',
             'text' => 'required|string|min:5|max:255',
-            'file' => 'nullable|file|mimes:png,jpg,pdf,xlsx,xls,doc,docx,zip,rar|max:10240',
         ];
     }
 }

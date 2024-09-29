@@ -1,24 +1,22 @@
 <?php
 
-namespace App\DTO\Tasks\Employee;
+namespace App\DTO\Tasks\Chief;
 
-use App\Http\Requests\Tasks\Employee\CloseRequest;
+use App\Http\Requests\Tasks\Chief\CorrectionRequest;
 
-readonly class CloseDTO
+readonly class CorrectionDTO
 {
     public function __construct(
         public int $taskId,
         public string $text,
-        public ?object $file,
     ) {
     }
 
-    public static function from(CloseRequest $request): self
+    public static function from(CorrectionRequest $request): self
     {
         return new self(
             taskId: $request->get('task_id'),
             text: $request->get('text'),
-            file: $request->file('file'),
         );
     }
 }

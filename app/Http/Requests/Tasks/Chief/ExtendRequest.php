@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Tasks\Employee;
+namespace App\Http\Requests\Tasks\Chief;
 
 use App\Http\Requests\Traits\ValidationTrait;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +26,6 @@ class ExtendRequest extends FormRequest
     {
         return [
             'task_id' => 'required|integer|exists:tasks,id',
-            'date_time' => 'required|date|date_format:Y-m-d H:i:s',
         ];
     }
 }

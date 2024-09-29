@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers\Tasks;
 
+use App\Actions\Tasks\Chief\ArchiveAction;
 use App\Actions\Tasks\Chief\CreateAction;
-use App\Actions\Tasks\Employee\AcceptAction;
-use App\Actions\Tasks\Employee\CloseAction;
-use App\Actions\Tasks\Employee\ExtendAction;
+use App\Actions\Tasks\Chief\AcceptAction;
+use App\Actions\Tasks\Chief\CorrectionAction;
+use App\Actions\Tasks\Chief\ExtendAction;
 use App\Actions\Tasks\Chief\IndexAction;
 use App\Actions\Tasks\Chief\ShowAction;
 use App\Actions\Tasks\Chief\UpdateAction;
+use App\DTO\Tasks\Chief\ArchiveDTO;
 use App\DTO\Tasks\Chief\CreateDTO;
-use App\DTO\Tasks\Employee\AcceptDTO;
-use App\DTO\Tasks\Employee\CloseDTO;
-use App\DTO\Tasks\Employee\ExtendDTO;
+use App\DTO\Tasks\Chief\AcceptDTO;
+use App\DTO\Tasks\Chief\CorrectionDTO;
+use App\DTO\Tasks\Chief\ExtendDTO;
 use App\DTO\Tasks\Chief\IndexDTO;
 use App\DTO\Tasks\Chief\UpdateDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tasks\Chief\ArchiveRequest;
 use App\Http\Requests\Tasks\Chief\CreateRequest;
-use App\Http\Requests\Tasks\Employee\AcceptRequest;
-use App\Http\Requests\Tasks\Employee\CloseRequest;
-use App\Http\Requests\Tasks\Employee\ExtendRequest;
+use App\Http\Requests\Tasks\Chief\AcceptRequest;
+use App\Http\Requests\Tasks\Chief\CorrectionRequest;
+use App\Http\Requests\Tasks\Chief\ExtendRequest;
 use App\Http\Requests\Tasks\Chief\IndexRequest;
 use App\Http\Requests\Tasks\Chief\UpdateRequest;
 use App\Http\Resources\Tasks\Chief\IndexCollection;
@@ -74,9 +77,20 @@ class ChiefTaskController extends Controller
     }
 
     /**
+     * Summary of toArchive
+     * @param \App\Http\Requests\Tasks\Chief\ArchiveRequest $request
+     * @param \App\Actions\Tasks\Chief\ArchiveAction $action
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toArchive(ArchiveRequest $request, ArchiveAction $action): JsonResponse
+    {
+        return $action(ArchiveDTO::from($request));
+    }
+
+    /**
      * Summary of accept
-     * @param int $id
-     * @param \App\Actions\Tasks\Employee\AcceptAction $action
+     * @param \App\Http\Requests\Tasks\Chief\AcceptRequest $request
+     * @param \App\Actions\Tasks\Chief\AcceptAction $action
      * @return \Illuminate\Http\JsonResponse
      */
     public function accept(AcceptRequest $request, AcceptAction $action): JsonResponse
@@ -85,24 +99,24 @@ class ChiefTaskController extends Controller
     }
 
     /**
-     * Summary of close
-     * @param \App\Http\Requests\Tasks\Employee\CloseRequest $request
-     * @param \App\Actions\Tasks\Employee\CloseAction $action
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function close(CloseRequest $request, CloseAction $action): JsonResponse
-    {
-        return $action(CloseDTO::from($request));
-    }
-
-    /**
      * Summary of extend
-     * @param \App\Http\Requests\Tasks\Employee\ExtendRequest $request
-     * @param \App\Actions\Tasks\Employee\ExtendAction $action
+     * @param \App\Http\Requests\Tasks\Chief\ExtendRequest $request
+     * @param \App\Actions\Tasks\Chief\ExtendAction $action
      * @return \Illuminate\Http\JsonResponse
      */
     public function extend(ExtendRequest $request, ExtendAction $action): JsonResponse
     {
         return $action(ExtendDTO::from($request));
+    }
+
+    /**
+     * Summary of correction
+     * @param \App\Http\Requests\Tasks\Chief\CorrectionRequest $request
+     * @param \App\Actions\Tasks\Chief\CorrectionAction $action
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function correction(CorrectionRequest $request, CorrectionAction $action): JsonResponse
+    {
+        return $action(CorrectionDTO::from($request));
     }
 }

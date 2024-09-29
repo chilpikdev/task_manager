@@ -34,7 +34,7 @@ class IndexResource extends JsonResource
                 ];
             }) : [],
             'left' => Carbon::parse($this->actual_deadline)->fromNow(),
-            'point' => null,
+            'point' => $this->points()->first()?->point,
         ];
     }
 }
