@@ -25,7 +25,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'position',
+        'birthday',
         'phone',
+        'phone_verified_at',
         'password',
         'active',
     ];
@@ -48,7 +50,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'birthday' => 'date',
+            'phone_verified_at' => 'datetime',
             'password' => PasswordCast::class,
             'active' => 'boolean',
         ];

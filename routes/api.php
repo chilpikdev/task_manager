@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Comments\CommentController;
+use App\Http\Controllers\Filters\FiltersController;
 use App\Http\Controllers\Tasks\ChiefTaskController;
 use App\Http\Controllers\Tasks\EmployeeTaskController;
+use App\Http\Controllers\Users\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::pattern('id', '\d+');
@@ -64,6 +66,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::prefix('comments')->group(function () {
             Route::get('/', [CommentController::class, 'index'])->name('comments.index');
+        });
+
+        Route::prefix('users')->middleware('can:manage-users')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('users.index');
+            Route::post('create', [UserController::class, 'create'])->name('users.create');
+            Route::get('show/{id}', [UserController::class, 'show'])->name('users.show');
+            Route::match(['put', 'patch'], 'update', [UserController::class, 'update'])->name('users.update');
+        });
+
+        Route::prefix('filters')->group(function () {
+            Route::get('employees', [FiltersController::class, 'employees'])->name('filters.employees');
+            Route::get('roles', [FiltersController::class, 'roles'])->name('filters.roles');
         });
     });
 });

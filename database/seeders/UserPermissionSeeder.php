@@ -19,24 +19,37 @@ class UserPermissionSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['guard_name' => 'web', 'name' => 'dashboard']);
+        Permission::create(['guard_name' => 'web', 'name' => 'statistics']);
         Permission::create(['guard_name' => 'web', 'name' => 'manage-users']);
 
         // create roles and assign existing permissions
         $role1 = Role::create(['guard_name' => 'web', 'name' => 'chief']);
-        $role1->givePermissionTo('dashboard');
+        $role1->givePermissionTo('statistics');
         $role1->givePermissionTo('manage-users');
 
         $role2 = Role::create(['guard_name' => 'web', 'name' => 'employee']);
 
-        // create user
+        // create users
         $user = User::create([
-            'name' => 'Тестовый Начальник',
+            'name' => 'Тестовый начальник',
             'position' => 'Начальник',
+            'birthday' => '1995-12-09',
             'phone' => 998937731818,
             'phone_verified_at' => now(),
             'password' => 12345,
         ]);
+
         $user->assignRole($role1);
+
+        $user2 = User::create([
+            'name' => 'Тестовый сотрудник',
+            'position' => 'Сотрудник',
+            'birthday' => '1995-12-09',
+            'phone' => 998907006808,
+            'phone_verified_at' => now(),
+            'password' => 12345,
+        ]);
+
+        $user2->assignRole($role2);
     }
 }
