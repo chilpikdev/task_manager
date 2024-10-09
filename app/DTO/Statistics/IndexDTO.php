@@ -1,32 +1,28 @@
 <?php
 
-namespace App\DTO\Tasks\Chief;
+namespace App\DTO\Statistics;
 
-use App\Http\Requests\Tasks\Chief\IndexRequest;
+use App\Http\Requests\Statistics\IndexRequest;
 
 readonly class IndexDTO
 {
     public function __construct(
-        public ?string $search,
-        public string $state,
-        public ?int $perPage,
-        public ?int $page,
         public ?int $year,
         public ?int $month,
         public ?array $employeesIds,
+        public ?int $perPage,
+        public ?int $page,
     ) {
     }
 
     public static function from(IndexRequest $request): self
     {
         return new self(
-            search: $request->get('search'),
-            state: $request->get('state'),
-            perPage: $request->get('perpage') ?: 10,
-            page: $request->get('page') ?: 1,
             year: $request->get('year'),
             month: $request->get('month'),
             employeesIds: $request->get('employees_ids'),
+            perPage: $request->get('perpage') ?: 10,
+            page: $request->get('page') ?: 1,
         );
     }
 }

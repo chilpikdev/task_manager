@@ -18,9 +18,11 @@ class IndexResource extends JsonResource
             'id' => $this->id,
             'text' => $this->text,
             'file' => $this->file ? [
-                'src' => asset('storage/' . $this->file->path),
-                'type' => $this->file->type,
-            ] : [],
+                'name' => $this->file?->name,
+                'src' => asset('storage/' . $this->file?->path),
+                'type' => $this->file?->type,
+                'size' => $this->file?->type,
+            ] : null,
             'created_by' => $this->createdBy ? [
                 'id' => $this->createdBy->id,
                 'name' => $this->createdBy->name,

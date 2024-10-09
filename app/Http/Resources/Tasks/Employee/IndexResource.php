@@ -23,6 +23,7 @@ class IndexResource extends JsonResource
             'priority' => $this->priority,
             'actual_deadline' => $this->actual_deadline,
             'extend_deadline' => $this->extendDeadline(),
+            'expired' => $this->actual_deadline <= now() ? true : false,
             'created_by' => $this->createdBy ? [
                 'id' => $this->createdBy->id,
                 'name' => $this->createdBy->name,

@@ -75,6 +75,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::match(['put', 'patch'], 'update', [UserController::class, 'update'])->name('users.update');
         });
 
+        Route::prefix('statistics')->middleware('can:statistics')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('statistics.index');
+        });
+
         Route::prefix('filters')->group(function () {
             Route::get('employees', [FiltersController::class, 'employees'])->name('filters.employees');
             Route::get('roles', [FiltersController::class, 'roles'])->name('filters.roles');
