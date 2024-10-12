@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    public static $wrap = 'user';
+    public static $wrap = '';
 
     /**
      * Transform the resource into an array.

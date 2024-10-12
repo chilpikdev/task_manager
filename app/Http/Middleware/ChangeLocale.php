@@ -15,7 +15,7 @@ class ChangeLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $key = 'Accept-Language';
+        $key = 'X-Language';
 
         if ($request->hasHeader($key) && $request->header($key)) {
             $locale = $request->header($key);
