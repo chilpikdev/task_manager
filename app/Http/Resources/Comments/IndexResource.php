@@ -21,7 +21,7 @@ class IndexResource extends JsonResource
                 'name' => $this->file?->name,
                 'src' => asset('storage/' . $this->file?->path),
                 'type' => $this->file?->type,
-                'size' => $this->file?->type,
+                'size' => round($this->file?->size * 0.00000095367432, 1),
             ] : null,
             'created_by' => $this->createdBy ? [
                 'id' => $this->createdBy->id,

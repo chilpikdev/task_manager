@@ -37,10 +37,10 @@ class CloseAction
 
             if ($dto->file) {
                 $data['file'] = [
-                    'name' => $dto->file->name(),
+                    'name' => $dto->file->getClientOriginalName(),
                     'path' => UploadFilesHelper::file($dto->file, 'attachments', $task->id),
                     'type' => $dto->file->extension(),
-                    'size' => $dto->file->size()
+                    'size' => $dto->file->getSize()
                 ];
             }
 
