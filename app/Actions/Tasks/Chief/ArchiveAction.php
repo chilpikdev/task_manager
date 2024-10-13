@@ -20,8 +20,8 @@ class ArchiveAction
         try {
             $task = Task::where('created_by', auth()->id())->findOrFail($dto->taskId);
 
-            if ($task->status === StatusEnum::CANCELED) {
-                throw new Exception("Task already archived");
+            if ($task->archived === true || $task->status === StatusEnum::CANCELED || $task->status === StatusEnum::COMPLETED) {
+                throw new Exception("Невозможно!");
             }
 
             $task->update([

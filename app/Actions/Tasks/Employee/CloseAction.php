@@ -7,6 +7,7 @@ use App\DTO\Tasks\Employee\CloseDTO;
 use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
 use App\Helpers\UploadFilesHelper;
+use App\Models\Comment;
 use App\Models\Task;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -44,7 +45,7 @@ class CloseAction
                 ];
             }
 
-            $task->comments()->create($data);
+            Comment::create($data);
 
             // after creating we changed task status to pending
             $task->update([

@@ -6,6 +6,7 @@ use App\Actions\Traits\ResponseTrait;
 use App\DTO\Tasks\Chief\CorrectionDTO;
 use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
+use App\Models\Comment;
 use App\Models\Task;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -24,7 +25,8 @@ class CorrectionAction
                 throw new Exception("Task not pending");
             }
 
-            $task->comments()->create([
+            Comment::create([
+                'task_id' => $task->id,
                 'created_by' => auth()->id(),
                 'text' => $dto->text
             ]);

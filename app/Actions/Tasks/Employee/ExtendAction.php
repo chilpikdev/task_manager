@@ -7,6 +7,7 @@ use App\DTO\Tasks\Employee\ExtendDTO;
 use App\Enums\StatusEnum;
 use App\Exceptions\ApiErrorException;
 use App\Models\Task;
+use App\Models\TaskDeadlineExtend;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,7 @@ class ExtendAction
         try {
             $task = Task::userTasks(auth()->id())->findOrFail($dto->taskId);
 
-            if ($task->status !== StatusEnum::IN_PROGRESS) {
+            if ($task->status !== StatusEnum::IN_PROGRESS || $task->status !== StatusEnum::CORRECTION) {
                 throw new Exception("Task status not in progress");
             }
 
@@ -29,7 +30,8 @@ class ExtendAction
             }
 
             // creating new item for recording requested date time
-            $task->taskDeadlineExtends()->create([
+            TaskDeadlineExtend::create([
+                'task_id' => $task->id,
                 'extend_deadline' => $dto->dateTime,
             ]);
 

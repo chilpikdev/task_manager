@@ -8,6 +8,8 @@ use App\Models\Task;
 use App\Actions\Traits\GenereateKeyCacheTrait;
 use App\Actions\Traits\ResponseTrait;
 use App\DTO\Tasks\Chief\AcceptDTO;
+use App\Models\Comment;
+use App\Models\UserPoint;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -26,14 +28,16 @@ class AcceptAction
             }
 
             foreach ($task->users as $user) {
-                $task->points()->create([
+                UserPoint::create([
                     'employee_id' => $user->id,
+                    'task_id' => $task->id,
                     'point' => $dto->point ?: 0,
                 ]);
             }
 
             if ($dto->text) {
-                $task->comments()->create([
+                Comment::create([
+                    'task_id' => $task->id,
                     'created_by' => auth()->id(),
                     'text' => $dto->text
                 ]);

@@ -15,13 +15,28 @@ class IndexResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
             'name' => $this->name,
-            'position' => $this->position,
-            'role' => $this->getRoleNames(),
-            'birthday' => $this->birthday->format('d.m.Y'),
-            'phone' => $this->phone,
-            'active' => $this->active,
+            'points' => $this->points,
+            'completed' => [
+                'on_time' => [
+                    'high' => $this->completed_on_time_high,
+                    'medium' => $this->completed_on_time_medium,
+                ],
+                'expired' => [
+                    'high' => $this->completed_expired_high,
+                    'medium' => $this->completed_expired_medium,
+                ],
+            ],
+            'unfulfilled' => [
+                'active' => [
+                    'high' => $this->unfulfilled_active_high,
+                    'medium' => $this->unfulfilled_active_medium
+                ],
+                'expired' => [
+                    'high' => $this->unfulfilled_expired_high,
+                    'medium' => $this->unfulfilled_expired_medium
+                ],
+            ]
         ];
     }
 }

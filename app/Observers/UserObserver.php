@@ -13,17 +13,20 @@ class UserObserver
     {
         $this->clear('users');
         $this->clear('filter_employees');
+        // $this->clear('statistics');
     }
 
     public function updated(User $user): void
     {
         $this->clear('users');
         $this->clear('filter_employees');
+        // $this->clear('statistics');
     }
 
     public function deleted(User $user): void
     {
         $this->clear('users');
         $this->clear('filter_employees');
+        // $this->clear('statistics');
     }
 }

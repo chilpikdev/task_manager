@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Comments\CommentController;
 use App\Http\Controllers\Filters\FiltersController;
+use App\Http\Controllers\Statistics\StatisticController;
 use App\Http\Controllers\Tasks\ChiefTaskController;
 use App\Http\Controllers\Tasks\EmployeeTaskController;
 use App\Http\Controllers\Users\UserController;
@@ -76,7 +77,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
 
         Route::prefix('statistics')->middleware('can:statistics')->group(function () {
-            Route::get('/', [UserController::class, 'index'])->name('statistics.index');
+            Route::get('/', [StatisticController::class, 'index'])->name('statistics.index');
         });
 
         Route::prefix('filters')->group(function () {
