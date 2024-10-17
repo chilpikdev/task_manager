@@ -117,7 +117,7 @@ class StatisticExport implements FromCollection, Responsable, ShouldAutoSize, Wi
             DB::raw("
                 (
                     SELECT
-                        COALESCE(SUM(point), 0)
+                        CAST(COALESCE(SUM(point), 0) AS varchar)
                     FROM
                         user_points
                     WHERE
