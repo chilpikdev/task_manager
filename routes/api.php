@@ -78,6 +78,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::prefix('statistics')->middleware('can:statistics')->group(function () {
             Route::get('/', [StatisticController::class, 'index'])->name('statistics.index');
+            Route::get('export', [StatisticController::class, 'export'])->name('statistics.export');
         });
 
         Route::prefix('filters')->group(function () {
