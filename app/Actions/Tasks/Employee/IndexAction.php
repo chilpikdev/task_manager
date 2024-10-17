@@ -59,6 +59,7 @@ class IndexAction
                 case 'archived':
                     $tasks
                         ->where('archived', '=', true)
+                        ->where('status', '=', 'canceled')
                         ->orderByDesc('updated_at');
                     break;
             }

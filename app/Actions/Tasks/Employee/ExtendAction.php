@@ -21,7 +21,7 @@ class ExtendAction
         try {
             $task = Task::userTasks(auth()->id())->findOrFail($dto->taskId);
 
-            if ($task->status !== StatusEnum::IN_PROGRESS || $task->status !== StatusEnum::CORRECTION) {
+            if ($task->status === StatusEnum::NEW || $task->status === StatusEnum::EXTEND) {
                 throw new Exception("Task status not in progress");
             }
 

@@ -6,6 +6,7 @@ use App\Exceptions\ApiErrorException;
 use App\Actions\Traits\ResponseTrait;
 use App\DTO\Users\UpdateDTO;
 use App\Models\User;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
@@ -17,6 +18,10 @@ class UpdateAction
     {
         try {
             $user = User::findOrFail($dto->userId);
+
+            if (auth()->id() == $dto->userId && $dto->active) {
+                throw new Exception("Вы не сможете заблокировать себя!");
+            }
 
             $data = [
                 'name' => $dto->name,
@@ -40,6 +45,8 @@ class UpdateAction
                 headers: [],
                 message: "User Updated"
             );
+        } catch (Exception $ex) {
+            throw new ApiErrorException(404, $ex->getMessage());
         } catch (ModelNotFoundException $th) {
             throw new ApiErrorException(404, "User not found");
         } catch (\Throwable $th) {
