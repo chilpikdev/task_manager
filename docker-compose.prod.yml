@@ -15,15 +15,15 @@ services:
     networks:
       - task_network
 
-  certbot:
-    image: certbot/certbot
-    container_name: task_certbot
-    volumes:
-      - /var/www/task_manager/ssl:/etc/letsencrypt
-      - nginx_data:/etc/nginx/conf.d
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - task_network
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: task_certbot
+  #   volumes:
+  #     - /var/www/task_manager/ssl:/etc/letsencrypt
+  #     - nginx_data:/etc/nginx/conf.d
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #   networks:
+  #     - task_network
 
   php:
     build:
