@@ -6,7 +6,7 @@ services:
         container_name: task_nginx
         volumes:
             - ./:/var/www/
-            # - ./_docker/images/nginx/conf.d/:/etc/nginx/conf.d/
+            - ./_docker/images/nginx/conf.d/localhost:/etc/nginx/conf.d/
         ports:
             - "8000:80"
         networks:
