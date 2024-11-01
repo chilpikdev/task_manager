@@ -1,0 +1,111 @@
+services:
+  nginx:
+    build:
+      context: ./_docker/images/nginx
+      dockerfile: Dockerfile
+    container_name: task_nginx
+    volumes:
+      - ./:/var/www/backend
+      - ./_docker/images/nginx/conf.d/prod:/etc/nginx/conf.d
+      - /var/www/task_manager/ssl:/etc/ssl/certs
+      - nginx_data:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - task_network
+
+  certbot:
+    image: certbot/certbot
+    container_name: task_certbot
+    volumes:
+      - /var/www/task_manager/ssl:/etc/letsencrypt
+      - nginx_data:/etc/nginx/conf.d
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - task_network
+
+  php:
+    build:
+      context: ./_docker/images/php
+      dockerfile: Dockerfile
+    container_name: task_php
+    volumes:
+      - ./:/var/www/backend
+    depends_on:
+      - postgres
+    networks:
+      - task_network
+
+  postgres:
+    image: postgres:latest
+    container_name: task_postgres
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      TZ: Asia/Tashkent
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - task_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: task_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@task.uz
+      PGADMIN_DEFAULT_PASSWORD: 3~1HYhp4e3@n
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - task_network
+
+  redis:
+    image: redis:latest
+    container_name: task_redis
+    command:
+      [
+          "sh",
+          "-c",
+          "redis-server --requirepass $${REDIS_PASSWORD}"
+      ]
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    networks:
+      - task_network
+
+  node:
+    image: node:latest
+    container_name: task_node
+    working_dir: /var/www/frontend
+    volumes:
+      - /var/www/task_manager/frontend:/var/www/frontend
+    command: sh -c "npm install && npm run build"
+    networks:
+      - task_network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  nginx_data:
+    driver: local
+
+networks:
+  task_network:
+    driver: bridge
