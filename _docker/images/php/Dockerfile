@@ -26,7 +26,7 @@ WORKDIR /var/www
 
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
 
-COPY ./_docker/images/php/conf.d/php.ini /usr/local/etc/php/conf.d/php.ini
+# COPY ./_docker/images/php/conf.d/php.ini /usr/local/etc/php/conf.d/php.ini
 
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/local/bin --filename=composer
