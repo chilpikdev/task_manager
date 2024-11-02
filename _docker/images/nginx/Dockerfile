@@ -3,7 +3,7 @@ FROM nginx:latest
 
 WORKDIR /var/www
 
-# COPY /_docker/images/nginx/conf.d/default.conf /etc/nginx/conf.d/
+COPY /_docker/images/nginx/conf.d/default.conf /etc/nginx/conf.d/
 
 RUN mkdir -p /var/cache/nginx/client_temp /var/run /var/log/nginx \
     && chown -R nginx:nginx /var/cache/nginx /var/run /var/log/nginx /var/www
