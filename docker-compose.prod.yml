@@ -31,7 +31,7 @@ services:
       dockerfile: Dockerfile
     container_name: task_php
     volumes:
-      - ./_docker/images/php/conf.d:/usr/local/etc/php/conf.d
+      # - ./_docker/images/php/conf.d:/usr/local/etc/php/conf.d
       - ./:/var/www/backend
     depends_on:
       - postgres
