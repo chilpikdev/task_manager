@@ -88,8 +88,7 @@ services:
       - task_network
 
   node:
-    # image: node:latest
-    image: node:19
+    image: node:latest
     container_name: task_node
     working_dir: /var/www/frontend
     volumes:
