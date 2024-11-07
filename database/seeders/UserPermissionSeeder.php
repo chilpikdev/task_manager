@@ -31,23 +31,23 @@ class UserPermissionSeeder extends Seeder
 
         // create users
         $user = User::create([
-            'name' => 'Тестовый начальник',
+            'name' => 'Суражатдин',
             'position' => 'Начальник',
-            'birthday' => '1995-12-09',
-            'phone' => 998937731818,
+            'birthday' => '1987-01-01',
+            'phone' => 998975005121,
             'phone_verified_at' => now(),
-            'password' => 12345,
+            'password' => 'Dm4Q9ppI9qDq',
         ]);
 
         $user->assignRole($role1);
 
         $user2 = User::create([
-            'name' => 'Тестовый сотрудник',
+            'name' => 'Сотрудник',
             'position' => 'Сотрудник',
-            'birthday' => '1995-12-09',
-            'phone' => 998907006808,
+            'birthday' => '1987-01-01',
+            'phone' => 998906539033,
             'phone_verified_at' => now(),
-            'password' => 12345,
+            'password' => 'j8S93SmjGfP1',
         ]);
 
         $user2->assignRole($role2);

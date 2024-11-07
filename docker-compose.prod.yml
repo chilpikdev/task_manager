@@ -1,14 +1,15 @@
 services:
   nginx:
     build:
-      context: ./_docker/images/nginx
+      context: ./_docker/images/nginx/
       dockerfile: Dockerfile
     container_name: task_nginx
     volumes:
       - ./:/var/www/backend
-      - ./_docker/images/nginx/conf.d/prod:/etc/nginx/conf.d
-      - /var/www/task_manager/ssl:/etc/ssl/certs
-      - nginx_data:/etc/nginx/conf.d
+      - /var/www/task_manager/frontend:/var/www/frontend
+      - ./_docker/images/nginx/conf.d/production:/etc/nginx/conf.d
+      - ./_docker/images/nginx/conf.d/nginx.conf:/etc/nginx/nginx.conf
+      # - /var/www/task_manager/ssl/www/:/var/www/certbot/:ro
     ports:
       - "80:80"
       - "443:443"
@@ -16,12 +17,12 @@ services:
       - task_network
 
   # certbot:
-  #   image: certbot/certbot
+  #   image: certbot/certbot:latest
   #   container_name: task_certbot
   #   volumes:
-  #     - /var/www/task_manager/ssl:/etc/letsencrypt
-  #     - nginx_data:/etc/nginx/conf.d
-  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #     - /var/www/task_manager/ssl/www/:/var/www/certbot/:rw
+  #     - /var/www/task_manager/ssl/conf/:/etc/letsencrypt/:rw
+  #   # entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   #   networks:
   #     - task_network
 
@@ -31,7 +32,7 @@ services:
       dockerfile: Dockerfile
     container_name: task_php
     volumes:
-      # - ./_docker/images/php/conf.d:/usr/local/etc/php/conf.d
+      - ./_docker/images/php/conf.d:/usr/local/etc/php/conf.d
       - ./:/var/www/backend
     depends_on:
       - postgres
@@ -87,24 +88,12 @@ services:
     networks:
       - task_network
 
-  node:
-    image: node:latest
-    container_name: task_node
-    working_dir: /var/www/frontend
-    volumes:
-      - /var/www/task_manager/frontend:/var/www/frontend
-    command: sh -c "npm install && npm run build"
-    networks:
-      - task_network
-
 volumes:
   postgres_data:
     driver: local
   redis_data:
     driver: local
   pgadmin_data:
-    driver: local
-  nginx_data:
     driver: local
 
 networks:

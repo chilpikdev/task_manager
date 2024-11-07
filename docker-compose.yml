@@ -18,6 +18,7 @@ services:
             dockerfile: ./_docker/images/php/Dockerfile
         container_name: task_php
         volumes:
+            - ./_docker/images/php/conf.d:/usr/local/etc/php/conf.d
             - ./:/var/www/
         depends_on:
             - nginx
