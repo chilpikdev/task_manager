@@ -19,7 +19,7 @@ class UpdateAction
         try {
             $user = User::findOrFail($dto->userId);
 
-            if (auth()->id() == $dto->userId && $dto->active) {
+            if (auth()->id() == $dto->userId && !$dto->active) {
                 throw new Exception("Вы не сможете заблокировать себя!");
             }
 
@@ -46,7 +46,7 @@ class UpdateAction
                 message: "User Updated"
             );
         } catch (Exception $ex) {
-            throw new ApiErrorException(404, $ex->getMessage());
+            throw new ApiErrorException(400, $ex->getMessage());
         } catch (ModelNotFoundException $th) {
             throw new ApiErrorException(404, "User not found");
         } catch (\Throwable $th) {

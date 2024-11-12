@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Actions\Users\CreateAction;
+use App\Actions\Users\DeleteAction;
 use App\Actions\Users\IndexAction;
 use App\Actions\Users\ShowAction;
 use App\Actions\Users\UpdateAction;
@@ -62,5 +63,16 @@ class UserController extends Controller
     public function update(UpdateRequest $request, UpdateAction $action): JsonResponse
     {
         return $action(UpdateDTO::from($request));
+    }
+
+    /**
+     * Summary of delete
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Actions\Users\DeleteAction $action
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(Request $request, DeleteAction $action): JsonResponse
+    {
+        return $action($request->id);
     }
 }

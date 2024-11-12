@@ -8,8 +8,9 @@ class DeleteFilesHelper
 {
     public static function file(string $path): void
     {
-        if (Storage::disk('public')->exists($path))
+        if (Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
+        }
     }
 
     public static function files(array $files): void

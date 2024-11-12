@@ -15,7 +15,7 @@ trait ResponseTrait
      * @param array|\Illuminate\Database\Eloquent\Collection $items
      * @return \Illuminate\Http\JsonResponse
      */
-    public function toResponse(int $code = 200, array $headers = [], ?string $message, array|Collection $items = []): JsonResponse
+    public function toResponse(int $code = 200, ?array $headers = null, ?string $message = null, array|Collection|null $items = null): JsonResponse
     {
         $data = [
             'code' => $code,

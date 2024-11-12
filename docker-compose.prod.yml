@@ -58,8 +58,8 @@ services:
     image: dpage/pgadmin4
     container_name: task_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@task.uz
-      PGADMIN_DEFAULT_PASSWORD: 3~1HYhp4e3@n
+      PGADMIN_DEFAULT_EMAIL: admin@e-tarbiya.uz
+      PGADMIN_DEFAULT_PASSWORD: rY77hdr8Y5mU
     ports:
       - "8080:80"
     volumes:

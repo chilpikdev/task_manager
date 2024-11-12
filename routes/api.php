@@ -74,6 +74,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('create', [UserController::class, 'create'])->name('users.create');
             Route::get('show/{id}', [UserController::class, 'show'])->name('users.show');
             Route::match(['put', 'patch'], 'update', [UserController::class, 'update'])->name('users.update');
+            Route::delete('delete/{id}', [UserController::class, 'delete'])->name('users.delete');
         });
 
         Route::prefix('statistics')->middleware('can:statistics')->group(function () {
